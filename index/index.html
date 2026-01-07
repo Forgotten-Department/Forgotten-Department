@@ -1,1 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Database Access Portal</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #d1d1d1;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
 
+        .container {
+            text-align: center;
+            border: 1px solid #333;
+            padding: 40px;
+            background: #0a0a0a;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .lang-switch { margin-bottom: 30px; }
+        
+        button {
+            background: transparent;
+            border: 1px solid #555;
+            color: #888;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #1a1a1a;
+            color: #fff;
+            border-color: #fff;
+        }
+
+        .mode-selection {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-quest:hover {
+            color: #ff0000;
+            border-color: #ff0000;
+            text-shadow: 0 0 5px #ff0000;
+        }
+
+        #terminal-text {
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            height: 1.2em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="terminal-text"></div>
+
+    <div class="lang-switch">
+        <button onclick="setLanguage('ru')">РУССКИЙ</button>
+        <button onclick="setLanguage('en')">ENGLISH</button>
+    </div>
+
+    <h2 id="title">SELECT ACCESS MODE</h2>
+
+    <div class="mode-selection">
+        <button id="btn-archive" onclick="start('archive')">READ ARCHIVE</button>
+        <button id="btn-quest" class="btn-quest" onclick="start('quest')">INITIALIZE QUEST</button>
+    </div>
+</div>
+
+<script>
+    // Объект с переводами
+    const translations = {
+        ru: {
+            title: "ВЫБЕРИТЕ РЕЖИМ ДОСТУПА",
+            archive: "ЧИТАТЬ АРХИВ",
+            quest: "ЗАПУСТИТЬ КВЕСТ",
+            welcome: "Установка соединения с сервером..."
+        },
+        en: {
+            title: "SELECT ACCESS MODE",
+            archive: "READ ARCHIVE",
+            quest: "INITIALIZE QUEST",
+            welcome: "Establishing connection to server..."
+        }
+    };
+
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('title').innerText = translations[lang].title;
+        document.getElementById('btn-archive').innerText = translations[lang].archive;
+        document.getElementById('btn-quest').innerText = translations[lang].quest;
+        typeWriter(translations[lang].welcome);
+    }
+
+    function typeWriter(text) {
+        let i = 0;
+        const speed = 50;
+        const el = document.getElementById('terminal-text');
+        el.innerText = "";
+        function type() {
+            if (i < text.length) {
+                el.innerText += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            }
+        }
+        type();
+    }
+
+    function start(mode) {
+        // Сохраняем выбор в локальное хранилище браузера, чтобы другие страницы помнили его
+        localStorage.setItem('gameMode', mode);
+        localStorage.setItem('gameLang', currentLang);
+        
+        // Переход на первую страницу лора
+        window.location.href = "entry_01.html";
+    }
+
+    // Запуск приветствия при загрузке
+    typeWriter("System ready. Please select language.");
+</script>
+
+</body>
+</html>
