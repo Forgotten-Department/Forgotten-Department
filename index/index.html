@@ -14,6 +14,7 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
 
         .container {
@@ -22,6 +23,7 @@
             padding: 40px;
             background: #0a0a0a;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            max-width: 600px;
         }
 
         .lang-switch { margin-bottom: 30px; }
@@ -34,6 +36,7 @@
             cursor: pointer;
             transition: all 0.3s;
             margin: 5px;
+            font-family: 'Courier New', monospace;
         }
 
         button:hover {
@@ -45,6 +48,7 @@
         .mode-selection {
             margin-top: 20px;
             display: flex;
+            justify-content: center;
             gap: 20px;
         }
 
@@ -57,30 +61,30 @@
         #terminal-text {
             font-size: 0.9em;
             margin-bottom: 20px;
-            height: 1.2em;
+            color: #00ff00; /* Зеленый цвет терминала */
+            height: 20px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="terminal-text"></div>
+    <div id="terminal-text">System initializing...</div>
 
     <div class="lang-switch">
         <button onclick="setLanguage('ru')">РУССКИЙ</button>
         <button onclick="setLanguage('en')">ENGLISH</button>
     </div>
 
-    <h2 id="title">SELECT ACCESS MODE</h2>
+    <h2 id="title">SELECT ACCESS MODE / ВЫБЕРИТЕ РЕЖИМ</h2>
 
     <div class="mode-selection">
-        <button id="btn-archive" onclick="start('archive')">READ ARCHIVE</button>
-        <button id="btn-quest" class="btn-quest" onclick="start('quest')">INITIALIZE QUEST</button>
+        <button id="btn-archive" onclick="start('archive')">ARCHIVE</button>
+        <button id="btn-quest" class="btn-quest" onclick="start('quest')">QUEST</button>
     </div>
 </div>
 
 <script>
-    // Объект с переводами
     const translations = {
         ru: {
             title: "ВЫБЕРИТЕ РЕЖИМ ДОСТУПА",
@@ -100,17 +104,21 @@
 
     function setLanguage(lang) {
         currentLang = lang;
+        // Обновляем текст заголовка и кнопок
         document.getElementById('title').innerText = translations[lang].title;
         document.getElementById('btn-archive').innerText = translations[lang].archive;
         document.getElementById('btn-quest').innerText = translations[lang].quest;
+        
+        // Запускаем эффект печати для приветствия
         typeWriter(translations[lang].welcome);
     }
 
     function typeWriter(text) {
         let i = 0;
-        const speed = 50;
+        const speed = 40;
         const el = document.getElementById('terminal-text');
-        el.innerText = "";
+        el.innerText = ""; // Очищаем перед началом
+        
         function type() {
             if (i < text.length) {
                 el.innerText += text.charAt(i);
@@ -122,16 +130,11 @@
     }
 
     function start(mode) {
-        // Сохраняем выбор в локальное хранилище браузера, чтобы другие страницы помнили его
         localStorage.setItem('gameMode', mode);
         localStorage.setItem('gameLang', currentLang);
-        
-        // Переход на первую страницу лора
-        window.location.href = "entry_01.html";
+        alert("Режим: " + mode + "\nЯзык: " + currentLang + "\n(Здесь будет переход на следующую страницу)");
+        // window.location.href = "entry_01.html"; 
     }
-
-    // Запуск приветствия при загрузке
-    typeWriter("System ready. Please select language.");
 </script>
 
 </body>
